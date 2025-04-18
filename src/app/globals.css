@@ -1,26 +1,93 @@
-@import "tailwindcss";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary-color: #2563EB;
+  --primary-dark: #1D4ED8;
+  --primary-light: #3B82F6;
+  --secondary-color: #A9C2E1;
+  --background-color: #F9FAFB;
+  --text-color: #333333;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+@layer components {
+  .gradient-primary {
+    background: linear-gradient(to top right, var(--primary-dark), var(--primary-light));
+  }
+
+  .gradient-secondary {
+    background: linear-gradient(to top right, #A9C2E1, #C1D4EB);
+    opacity: 0.7;
+  }
+
+  .status-check-in {
+    background-color: rgb(220, 38, 38); /* red-600 */
+  }
+
+  .status-partially-paid {
+    background-color: rgb(202, 138, 4); /* yellow-600 */
+  }
+
+  .status-paid {
+    background-color: rgb(29, 78, 216); /* blue-700 */
+  }
+
+  .status-check-out {
+    background-color: rgb(107, 114, 128); /* gray-500 */
+  }
+
+  .card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+
+  .button-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 150ms ease;
+  }
+  
+  .button-primary:hover {
+    background-color: var(--primary-dark);
+  }
+
+  .button-secondary {
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 150ms ease;
+  }
+  
+  .button-secondary:hover {
+    background-color: #F0F9FF;
+  }
+
+  .input-field {
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    transition: all 150ms ease;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
 }
