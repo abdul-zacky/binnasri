@@ -23,7 +23,7 @@ export default function Header() {
         </button>
         
         <div className="flex-1 md:ml-8">
-          <h1 className="text-lg font-semibold text-gray-800 md:hidden">WMS</h1>
+          <h1 className="text-lg font-semibold text-gray-800 md:hidden">Bin Nasri</h1>
         </div>
         
         {/* Right side items */}

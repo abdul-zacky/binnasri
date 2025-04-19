@@ -43,12 +43,12 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-600">WMS</h1>
+          <h1 className="text-3xl font-bold text-blue-600">Bin Nasri</h1>
           <p className="text-gray-600">Wisma Management System</p>
         </div>
         
         <div className="bg-white p-8 rounded-lg shadow-md w-full">
-          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login to WMS</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login to Bin Nasri</h1>
           
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">

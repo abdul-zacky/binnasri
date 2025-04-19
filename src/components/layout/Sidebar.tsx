@@ -28,7 +28,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="p-6">
         <Link href="/dashboard" className="flex items-center">
-          <h1 className="text-2xl font-bold text-blue-600">WMS</h1>
+          <h1 className="text-2xl font-bold text-blue-600">Bin Nasri</h1>
         </Link>
         <p className="text-sm text-gray-500 mt-1">Wisma Management System</p>
       </div>
