@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Menu, Bell, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import { toggleMobileNav } from './MobileNav'; // Import the toggle function
 
 export default function Header() {
   const { user, signOut } = useAuth();
@@ -12,8 +13,12 @@ export default function Header() {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
       <div className="px-4 py-3 flex items-center justify-between">
-        {/* Mobile menu button */}
-        <button className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
+        {/* Mobile menu button - now uses the toggleMobileNav function */}
+        <button 
+          className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100"
+          onClick={toggleMobileNav}
+          aria-label="Toggle navigation menu"
+        >
           <Menu size={24} />
         </button>
         

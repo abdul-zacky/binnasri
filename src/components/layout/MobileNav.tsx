@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -9,10 +9,15 @@ import {
   Wallet, 
   Settings, 
   LogOut,
-  Menu,
   X
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+
+// Create a custom event for toggle communication
+export const toggleMobileNav = () => {
+  const event = new CustomEvent('toggle-mobile-nav');
+  window.dispatchEvent(event);
+};
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -25,18 +30,19 @@ export default function MobileNav() {
     { href: '/wallet', label: 'Wallet', icon: <Wallet size={20} /> },
     { href: '/settings', label: 'Settings', icon: <Settings size={20} /> }
   ];
+
+  // Listen for the custom toggle event
+  useEffect(() => {
+    const handleToggle = () => setIsOpen(prev => !prev);
+    window.addEventListener('toggle-mobile-nav', handleToggle);
+    
+    return () => {
+      window.removeEventListener('toggle-mobile-nav', handleToggle);
+    };
+  }, []);
   
   return (
     <>
-      {/* Burger Button */}
-      <button 
-        onClick={() => setIsOpen(!isOpen)} 
-        className="fixed top-4 right-4 z-30 p-2 bg-white rounded-lg shadow-md md:hidden"
-        aria-label={isOpen ? "Close menu" : "Open menu"}
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-      
       {/* Mobile Sidebar Overlay */}
       <div 
         className={`fixed inset-0 bg-black bg-opacity-50 z-20 transition-opacity duration-300 md:hidden ${
@@ -52,8 +58,18 @@ export default function MobileNav() {
         }`}
       >
         <div className="flex flex-col h-full">
+          {/* Close button */}
+          <div className="flex justify-end p-4">
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="p-1 rounded-full text-gray-500 hover:bg-gray-100"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          
           {/* Logo */}
-          <div className="p-6">
+          <div className="px-6 pb-6 -mt-4">
             <Link href="/dashboard" className="flex items-center">
               <h1 className="text-2xl font-bold text-blue-600">WMS</h1>
             </Link>
@@ -103,28 +119,6 @@ export default function MobileNav() {
           </div>
         </div>
       </div>
-      
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10 md:hidden">
-        <div className="flex justify-around">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-            
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center py-3 ${
-                  isActive ? 'text-blue-600' : 'text-gray-600'
-                }`}
-              >
-                {item.icon}
-                <span className="text-xs mt-1">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
     </>
   );
 }
