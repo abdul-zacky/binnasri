@@ -1,5 +1,20 @@
+// src/hooks/useChecks.ts
+"use client";
+
 import { useState, useEffect } from 'react';
-import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, Timestamp, increment } from 'firebase/firestore';
+import { 
+  collection, 
+  doc, 
+  getDocs, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  query, 
+  orderBy, 
+  Timestamp, 
+  increment,
+  onSnapshot
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Check, Status } from '@/models/check';
 
@@ -8,35 +23,48 @@ export const useChecks = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchChecks = async () => {
-    try {
-      setLoading(true);
-      const checksQuery = query(collection(db, 'checks'), orderBy('createdAt', 'desc'));
-      const querySnapshot = await getDocs(checksQuery);
-      
-      const fetchedChecks = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          roomNumber: data.roomNumber,
-          guestName: data.guestName,
-          status: data.status,
-          checkDate: data.checkDate.toDate ? data.checkDate.toDate() : new Date(data.checkDate),
-          checkOutDate: data.checkOutDate.toDate ? data.checkOutDate.toDate() : new Date(data.checkOutDate),
-          lastDayPaid: data.lastDayPaid.toDate ? data.lastDayPaid.toDate() : new Date(data.lastDayPaid),
-          totalPayment: data.totalPayment,
-          createdAt: data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt)
-        } as Check;
-      });
-      
-      setChecks(fetchedChecks);
-    } catch (err) {
-      console.error('Error fetching checks:', err);
-      setError('Failed to fetch checks');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Use onSnapshot for real-time updates
+  useEffect(() => {
+    setLoading(true);
+    const checksQuery = query(collection(db, 'checks'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(checksQuery, 
+      (snapshot) => {
+        try {
+          const fetchedChecks = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              roomNumber: data.roomNumber,
+              guestName: data.guestName,
+              status: data.status,
+              checkDate: data.checkDate.toDate ? data.checkDate.toDate() : new Date(data.checkDate),
+              checkOutDate: data.checkOutDate.toDate ? data.checkOutDate.toDate() : new Date(data.checkOutDate),
+              lastDayPaid: data.lastDayPaid?.toDate ? data.lastDayPaid.toDate() : new Date(data.lastDayPaid),
+              totalPayment: data.totalPayment,
+              createdAt: data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt)
+            } as Check;
+          });
+          
+          setChecks(fetchedChecks);
+          setLoading(false);
+          setError(null);
+        } catch (err) {
+          console.error('Error processing checks data:', err);
+          setError('Failed to process checks data');
+          setLoading(false);
+        }
+      }, 
+      (err) => {
+        console.error('Error fetching checks:', err);
+        setError('Failed to fetch checks');
+        setLoading(false);
+      }
+    );
+    
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   const addCheck = async (newCheck: Omit<Check, 'id'>) => {
     try {
@@ -46,17 +74,11 @@ export const useChecks = () => {
         checkOutDate: Timestamp.fromDate(newCheck.checkOutDate),
         lastDayPaid: Timestamp.fromDate(newCheck.lastDayPaid || newCheck.checkDate),
         createdAt: Timestamp.fromDate(newCheck.createdAt),
-        status: newCheck.status
       };
       
+      // Add to Firestore - the real-time listener will update state
       const docRef = await addDoc(collection(db, 'checks'), checkData);
-      const addedCheck: Check = {
-        ...newCheck,
-        id: docRef.id
-      };
-      
-      setChecks(prev => [addedCheck, ...prev]);
-      return addedCheck;
+      return { ...newCheck, id: docRef.id };
     } catch (err) {
       console.error('Error adding check:', err);
       setError('Failed to add check');
@@ -73,17 +95,8 @@ export const useChecks = () => {
         totalPayment: increment(addedPaymentAmount)
       });
       
-      setChecks(prev => prev.map(check => {
-        if (check.id === id) {
-          return {
-            ...check,
-            status: newStatus,
-            lastDayPaid,
-            totalPayment: check.totalPayment + addedPaymentAmount
-          };
-        }
-        return check;
-      }));
+      // No need to update state manually - the real-time listener will handle it
+      return true;
     } catch (err) {
       console.error('Error updating check status:', err);
       setError('Failed to update check status');
@@ -98,15 +111,8 @@ export const useChecks = () => {
         checkOutDate: Timestamp.fromDate(extendDate)
       });
       
-      setChecks(prev => prev.map(check => {
-        if (check.id === id) {
-          return {
-            ...check,
-            checkOutDate: extendDate
-          };
-        }
-        return check;
-      }));
+      // No need to update state manually - the real-time listener will handle it
+      return true;
     } catch (err) {
       console.error('Error extending check-out date:', err);
       setError('Failed to extend check-out date');
@@ -117,7 +123,8 @@ export const useChecks = () => {
   const deleteCheck = async (id: string) => {
     try {
       await deleteDoc(doc(db, 'checks', id));
-      setChecks(prev => prev.filter(check => check.id !== id));
+      // No need to update state manually - the real-time listener will handle it
+      return true;
     } catch (err) {
       console.error('Error deleting check:', err);
       setError('Failed to delete check');
@@ -125,15 +132,10 @@ export const useChecks = () => {
     }
   };
 
-  useEffect(() => {
-    fetchChecks();
-  }, []);
-
   return {
     checks,
     loading,
     error,
-    fetchChecks,
     addCheck,
     updateCheckStatus,
     extendCheckOutDate,

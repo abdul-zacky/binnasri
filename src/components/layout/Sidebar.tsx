@@ -18,7 +18,7 @@ export default function Sidebar() {
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
-    { href: '/expenses', label: 'Expenses', icon: <DollarSign size={20} /> },
+    { href: '/expenses', label: 'Expenses (Beta)', icon: <DollarSign size={20} /> },
     { href: '/wallet', label: 'Wallet', icon: <Wallet size={20} /> },
     { href: '/settings', label: 'Settings', icon: <Settings size={20} /> },
   ];

@@ -64,25 +64,25 @@ export default function ExpenseForm({ onClose }: ExpenseFormProps) {
   };
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50">
-      <div className="bg-white rounded-t-3xl w-full max-h-[80%] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">Add Expense</h2>
-            <button onClick={onClose}>
+            <h2 className="text-xl font-bold text-gray-800">Add Expense</h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
               <X size={24} />
             </button>
           </div>
           
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
               {error}
             </div>
           )}
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-gray-700 mb-2">Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
               <input
                 type="text"
                 value={title}
@@ -95,7 +95,7 @@ export default function ExpenseForm({ onClose }: ExpenseFormProps) {
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 mb-2">Amount</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
                 <div className="relative">
                   <span className="absolute left-3 top-2.5 text-gray-500">Rp</span>
                   <input
@@ -110,7 +110,7 @@ export default function ExpenseForm({ onClose }: ExpenseFormProps) {
               </div>
               
               <div>
-                <label className="block text-gray-700 mb-2">Date</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                 <input
                   type="date"
                   value={date}
@@ -121,7 +121,7 @@ export default function ExpenseForm({ onClose }: ExpenseFormProps) {
             </div>
             
             <div>
-              <label className="block text-gray-700 mb-2">Category</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as Category)}
@@ -139,14 +139,14 @@ export default function ExpenseForm({ onClose }: ExpenseFormProps) {
               <button 
                 type="button"
                 onClick={onClose}
-                className="button-secondary"
+                className="button-secondary py-2 px-4"
               >
                 Cancel
               </button>
               
               <button
                 type="submit"
-                className="button-primary"
+                className="button-primary py-2 px-4"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Saving...' : 'Save Expense'}
