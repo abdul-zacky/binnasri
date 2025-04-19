@@ -1,17 +1,22 @@
+// src/lib/firebase-admin.ts
 import * as admin from 'firebase-admin';
 
-// This approach prevents multiple initializations
+// Initialize Firebase Admin if not already initialized
 export function initAdmin() {
   if (!admin.apps.length) {
-    // Using environment variables is better
-    // For local development, generate a service account key from Firebase console
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n')
-      })
-    });
+    try {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          // The private key needs to be properly formatted
+          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n')
+        })
+      });
+      console.log('Firebase Admin initialized successfully');
+    } catch (error) {
+      console.error('Firebase admin initialization error:', error);
+    }
   }
   
   return admin;
