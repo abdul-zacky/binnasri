@@ -9,29 +9,42 @@ if (!admin.apps.length) {
       !process.env.FIREBASE_CLIENT_EMAIL ||
       !process.env.FIREBASE_PRIVATE_KEY
     ) {
-      console.error(
-        'Firebase Admin SDK missing required environment variables:',
-        {
-          projectId: !!process.env.FIREBASE_PROJECT_ID,
-          clientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: !!process.env.FIREBASE_PRIVATE_KEY,
-        }
-      );
-      throw new Error('Firebase Admin SDK missing required environment variables');
+      throw new Error('Missing Firebase Admin environment variables');
     }
-
+    
+    // Remove extra quotes if present (Vercel sometimes adds them)
+    let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+    
+    // If the key starts and ends with quotes, remove them
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1);
+    }
+    
+    // Replace literal \n with actual newlines
+    privateKey = privateKey.replace(/\\n/g, '\n');
+    
+    // Initialize the app with the service account
     admin.initializeApp({
       credential: admin.credential.cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        // The replace is needed because Vercel stores newlines as literals
-        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        privateKey: privateKey
       }),
     });
-    console.log('Firebase Admin initialized successfully');
+    
+    console.log('Firebase Admin SDK initialized successfully');
   } catch (error) {
     console.error('Firebase Admin initialization error:', error);
-    throw error; // Re-throw to make failures visible
+    
+    // Log more details about the environment variables for debugging
+    console.error('Environment variable details:', {
+      projectIdExists: !!process.env.FIREBASE_PROJECT_ID,
+      clientEmailExists: !!process.env.FIREBASE_CLIENT_EMAIL,
+      privateKeyExists: !!process.env.FIREBASE_PRIVATE_KEY,
+      privateKeyLength: process.env.FIREBASE_PRIVATE_KEY?.length
+    });
+    
+    throw error;
   }
 }
 
