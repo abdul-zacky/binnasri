@@ -58,7 +58,7 @@ export default function Header() {
                   <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                 </div>
                 <Link href="/settings" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
-                <button
+                {/* <button
                   onClick={() => {
                     signOut();
                     setDropdownOpen(false);
@@ -66,7 +66,7 @@ export default function Header() {
                   className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   Sign out
-                </button>
+                </button> */}
               </div>
             )}
           </div>

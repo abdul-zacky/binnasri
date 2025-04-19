@@ -105,7 +105,7 @@ export default function MobileNav() {
           </nav>
 
           {/* Logout button */}
-          <div className="p-4 border-t border-gray-200">
+          {/* <div className="p-4 border-t border-gray-200">
             <button
               onClick={() => {
                 signOut();
@@ -116,7 +116,7 @@ export default function MobileNav() {
               <LogOut size={20} className="mr-3 text-gray-500" />
               <span className="font-medium">Logout</span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
