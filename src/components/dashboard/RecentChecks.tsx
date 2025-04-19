@@ -78,7 +78,7 @@ export default function RecentChecks({ onCheckSelect, loading, error }: RecentCh
                     color: statusColor[check.status] 
                   }}
                 >
-                  {/* {Status[check.status]} */}
+                  {check.status}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
