@@ -23,6 +23,7 @@ export enum Status {
   };
   
   export interface Check {
+    [x: string]: any;
     id: string;
     roomNumber: number;
     guestName: string;
