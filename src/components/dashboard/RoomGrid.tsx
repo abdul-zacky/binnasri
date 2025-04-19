@@ -14,7 +14,7 @@ interface RoomGridProps {
 export default function RoomGrid({ onRoomSelect, loading, error }: RoomGridProps) {
   const { checks } = useChecks();
   const validRooms = generateValidRooms();
-  
+
   // Group rooms by floor
   const roomsByFloor = validRooms.reduce((acc, room) => {
     const floor = Math.floor(room / 100);
@@ -26,18 +26,18 @@ export default function RoomGrid({ onRoomSelect, loading, error }: RoomGridProps
   // Create a map of room statuses
   const roomStatuses = new Map();
   validRooms.forEach(room => {
-    roomStatuses.set(room, { 
-      status: Status.CheckOut, 
+    roomStatuses.set(room, {
+      status: Status.CheckOut,
       guestName: 'Empty',
-      checkId: '' 
+      checkId: ''
     });
   });
-  
+
   // Update with actual check data
   checks.forEach(check => {
     if (check.status !== Status.CheckOut) {
-      roomStatuses.set(check.roomNumber, { 
-        status: check.status, 
+      roomStatuses.set(check.roomNumber, {
+        status: check.status,
         guestName: check.guestName,
         checkId: check.id
       });
@@ -69,29 +69,30 @@ export default function RoomGrid({ onRoomSelect, loading, error }: RoomGridProps
             {rooms.map(roomNumber => {
               const roomData = roomStatuses.get(roomNumber);
               const isOccupied = roomData.status !== Status.CheckOut;
-              const displayColor = isOccupied ? statusColor[roomData.status] : '#ffffff';
-              
+              const displayColor = isOccupied
+                ? (statusColor[roomData.status as keyof typeof statusColor] || '#ffffff')
+                : '#ffffff';
+
               return (
-                <div 
+                <div
                   key={roomNumber}
                   onClick={() => isOccupied && onRoomSelect(roomData.checkId)}
-                  className={`rounded-lg py-3 px-2 text-center cursor-pointer transition-shadow hover:shadow-md ${
-                    isOccupied ? '' : 'border border-gray-200'
-                  }`}
-                  style={{ 
-                    backgroundColor: isOccupied 
+                  className={`rounded-lg py-3 px-2 text-center cursor-pointer transition-shadow hover:shadow-md ${isOccupied ? '' : 'border border-gray-200'
+                    }`}
+                  style={{
+                    backgroundColor: isOccupied
                       ? `${displayColor}22`
                       : '#ffffff',
                     borderColor: isOccupied ? displayColor : ''
                   }}
                 >
-                  <p 
+                  <p
                     className="text-lg font-bold"
                     style={{ color: isOccupied ? displayColor : '#6B7280' }}
                   >
                     {roomNumber}
                   </p>
-                  <p 
+                  <p
                     className="text-xs truncate"
                     style={{ color: isOccupied ? displayColor : '#9CA3AF' }}
                   >
