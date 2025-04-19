@@ -7,11 +7,12 @@ import { Loader2 } from 'lucide-react';
 
 interface RoomGridProps {
   onRoomSelect: (checkId: string) => void;
+  onEmptyRoomSelect: (roomNumber: number) => void; // New prop for empty room selection
   loading: boolean;
   error: string | null;
 }
 
-export default function RoomGrid({ onRoomSelect, loading, error }: RoomGridProps) {
+export default function RoomGrid({ onRoomSelect, onEmptyRoomSelect, loading, error }: RoomGridProps) {
   const { checks } = useChecks();
   const validRooms = generateValidRooms();
 
@@ -76,9 +77,13 @@ export default function RoomGrid({ onRoomSelect, loading, error }: RoomGridProps
               return (
                 <div
                   key={roomNumber}
-                  onClick={() => isOccupied && onRoomSelect(roomData.checkId)}
-                  className={`rounded-lg py-3 px-2 text-center cursor-pointer transition-shadow hover:shadow-md ${isOccupied ? '' : 'border border-gray-200'
-                    }`}
+                  onClick={() => isOccupied 
+                    ? onRoomSelect(roomData.checkId) 
+                    : onEmptyRoomSelect(roomNumber)
+                  }
+                  className={`rounded-lg py-3 px-2 text-center cursor-pointer transition-shadow hover:shadow-md ${
+                    isOccupied ? '' : 'border border-gray-200 hover:border-blue-400'
+                  }`}
                   style={{
                     backgroundColor: isOccupied
                       ? `${displayColor}22`

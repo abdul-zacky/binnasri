@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const { checks, loading, error } = useChecks();
   const [selectedCheckId, setSelectedCheckId] = useState<string | null>(null);
   const [showCheckInForm, setShowCheckInForm] = useState(false);
+  const [selectedRoomNumber, setSelectedRoomNumber] = useState<number | undefined>(undefined);
   
   const selectedCheck = selectedCheckId ? checks.find(check => check.id === selectedCheckId) : null;
   
@@ -42,6 +43,16 @@ export default function DashboardPage() {
     );
   }).length;
 
+  const handleNewCheckIn = (roomNumber?: number) => {
+    setSelectedRoomNumber(roomNumber);
+    setShowCheckInForm(true);
+  };
+
+  const handleCloseCheckInForm = () => {
+    setShowCheckInForm(false);
+    setSelectedRoomNumber(undefined);
+  };
+
   return (
     <div className="container mx-auto">
       <div className="mb-6">
@@ -65,7 +76,7 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-gray-800">Room Status</h2>
           <button 
-            onClick={() => setShowCheckInForm(true)}
+            onClick={() => handleNewCheckIn()}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition"
           >
             <Plus size={18} />
@@ -75,7 +86,8 @@ export default function DashboardPage() {
         
         <div className="bg-white p-6 rounded-xl shadow-sm">
           <RoomGrid 
-            onRoomSelect={(checkId) => setSelectedCheckId(checkId)} 
+            onRoomSelect={(checkId) => setSelectedCheckId(checkId)}
+            onEmptyRoomSelect={(roomNumber) => handleNewCheckIn(roomNumber)}
             loading={loading}
             error={error}
           />
@@ -107,7 +119,8 @@ export default function DashboardPage() {
       
       {showCheckInForm && (
         <CheckInForm
-          onClose={() => setShowCheckInForm(false)}
+          onClose={handleCloseCheckInForm}
+          initialRoomNumber={selectedRoomNumber}
         />
       )}
     </div>

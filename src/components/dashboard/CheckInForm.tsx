@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useChecks } from '@/hooks/useChecks';
 import { Status } from '@/models/check';
 import { generateValidRooms } from '@/lib/utils';
@@ -8,12 +8,13 @@ import { X, Calendar, CreditCard, User, Home } from 'lucide-react';
 
 interface CheckInFormProps {
   onClose: () => void;
+  initialRoomNumber?: number; // Optional prop for pre-filling room number
 }
 
-export default function CheckInForm({ onClose }: CheckInFormProps) {
+export default function CheckInForm({ onClose, initialRoomNumber }: CheckInFormProps) {
   const { checks, addCheck } = useChecks();
   const [guestName, setGuestName] = useState('');
-  const [roomNumber, setRoomNumber] = useState('');
+  const [roomNumber, setRoomNumber] = useState(initialRoomNumber ? initialRoomNumber.toString() : '');
   const [checkInDate, setCheckInDate] = useState(new Date().toISOString().split('T')[0]);
   const [checkOutDate, setCheckOutDate] = useState(
     new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]
