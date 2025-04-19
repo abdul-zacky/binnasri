@@ -61,7 +61,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Logout button */}
-      <div className="p-4 border-t border-gray-200">
+      {/* <div className="p-4 border-t border-gray-200">
         <button
           onClick={() => signOut()}
           className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -69,7 +69,7 @@ export default function Sidebar() {
           <LogOut size={20} className="mr-3 text-gray-500" />
           <span className="font-medium">Logout</span>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
