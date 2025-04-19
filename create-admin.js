@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const fs = require('fs');
 
 // Path to your service account file
-const SERVICE_ACCOUNT_PATH = './wisma1-firebase-adminsdk-944ey-8bad8df6a7.json'; // Update this path
+const SERVICE_ACCOUNT_PATH = './wisma1-firebase-adminsdk-944ey-def1470451.json'; // Update this path
 
 // Admin user details
 const adminUser = {
