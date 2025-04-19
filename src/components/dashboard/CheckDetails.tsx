@@ -74,7 +74,6 @@ export default function CheckDetails({ check, onClose }: CheckDetailsProps) {
                     color: statusColor[check.status]
                   }}
                 >
-                  {/* {Status[check.status]} */}
                 </div>
               </div>
             </div>
