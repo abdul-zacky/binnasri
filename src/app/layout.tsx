@@ -6,7 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'WMS - Wisma Management System',
+  title: 'Bin Nasri Management System',
   description: 'Web-based hotel/guest house management system',
 };
 
