@@ -13,7 +13,7 @@ interface RecentChecksProps {
 
 export default function RecentChecks({ onCheckSelect, loading, error }: RecentChecksProps) {
   const { checks } = useChecks();
-  
+
   // Get recent checks (not checked out)
   const recentChecks = checks
     .filter(check => check.status !== Status.CheckOut)
@@ -51,15 +51,15 @@ export default function RecentChecks({ onCheckSelect, loading, error }: RecentCh
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guest</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
             <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check In</th>
             <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check Out</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-          </tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {recentChecks.map((check) => (
-            <tr 
+            <tr
               key={check.id}
               onClick={() => onCheckSelect(check.id)}
               className="hover:bg-gray-50 cursor-pointer transition-colors"
@@ -70,16 +70,8 @@ export default function RecentChecks({ onCheckSelect, loading, error }: RecentCh
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{check.guestName}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span 
-                  className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                  style={{ 
-                    backgroundColor: `${statusColor[check.status]}22`,
-                    color: statusColor[check.status] 
-                  }}
-                >
-                  {check.status}
-                </span>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {formatCurrency(check.totalPayment)}
               </td>
               <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {formatDate(check.checkDate)}
@@ -87,8 +79,16 @@ export default function RecentChecks({ onCheckSelect, loading, error }: RecentCh
               <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {formatDate(check.checkOutDate)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {formatCurrency(check.totalPayment)}
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span
+                  className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  style={{
+                    backgroundColor: `${statusColor[check.status]}22`,
+                    color: statusColor[check.status]
+                  }}
+                >
+                  {check.status}
+                </span>
               </td>
             </tr>
           ))}
